@@ -23,3 +23,12 @@ export const PRAISE = [
   "Genialnie!",
   "Dobra robota!"
 ];
+
+export const DRAGON_QUOTES = [
+  "Smok mówi: jesteś nie do zatrzymania!",
+  "Ogień mocy! Tak trzymaj!",
+  "Masz skrzydła do liczenia!",
+  "Twoja seria jest legendarna!",
+  "Potęga umysłu! Lecimy dalej!",
+  "To była smocza szybkość!"
+];

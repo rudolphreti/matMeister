@@ -3,6 +3,7 @@ import { elEquation, elAnswer } from "./dom.js";
 import { playCoins, playWrong, ensureAudio } from "./audio.js";
 import { generateQuestion } from "./questions.js";
 import { bonusRemaining, startBonusTimer } from "./bonus.js";
+import { triggerDragonCelebration } from "./dragon.js";
 import { setFeedback, updateHUD } from "./ui.js";
 import { state, setQuestion, setScore } from "./state.js";
 import { saveScore } from "./storage.js";
@@ -78,6 +79,7 @@ function awardForCorrect(){
 
   if (state.score.streak === 5) msg += " Seria 5!";
   if (state.score.streak === 10) msg += " Seria 10!";
+  if (state.score.streak === 10 && gained > 1) triggerDragonCelebration();
 
   return msg;
 }
