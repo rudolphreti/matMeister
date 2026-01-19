@@ -33,18 +33,3 @@ export const DRAGON_QUOTES = [
   "Potęga umysłu! Lecimy dalej!",
   "To była smocza szybkość!"
 ];
-
-export const BONUS_ICONS = [
-  "✨",
-  "🔥",
-  "⚡",
-  "⭐",
-  "💎",
-  "🏆",
-  "🎯",
-  "🚀",
-  "🧠",
-  "🪙",
-  "🌟",
-  "🦖"
-];

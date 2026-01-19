@@ -23,7 +23,7 @@ export const maxXInput = document.getElementById("maxX");
 export const bonusSecondsInput = document.getElementById("bonusSeconds");
 export const maxBonusInput = document.getElementById("maxBonus");
 export const minZeroSelect = document.getElementById("minZeroSelect");
-export const bonusIconSelect = document.getElementById("bonusIconSelect");
+export const bonusIconPicker = document.getElementById("bonusIconPicker");
 
 export const soundToggle = document.getElementById("soundToggle");
 export const praiseToggle = document.getElementById("praiseToggle");
