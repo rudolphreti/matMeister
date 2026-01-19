@@ -29,6 +29,10 @@
           <div class="label">BONUS</div>
           <div class="value" id="bonusText">aktywny</div>
         </div>
+        <div class="pill" title="Seria bonusów">
+          <div class="label"><span id="bonusStreakIcon" aria-hidden="true">✨</span> BONUS ×</div>
+          <div class="value" id="bonusStreakValue">0</div>
+        </div>
       </div>
     </header>
 
@@ -41,6 +45,15 @@
         </div>
 
         <div class="feedback" id="feedback" aria-live="polite"></div>
+      </section>
+
+      <section class="dragonSpot" id="dragonSpot" aria-live="polite" aria-hidden="true">
+        <div class="dragonFigure" aria-hidden="true">
+          <img src="Dragon-157214.svg" alt="" />
+        </div>
+        <div class="speechBubble" id="dragonBubble" role="status">
+          <p id="dragonText"></p>
+        </div>
       </section>
     </main>
   </div>
@@ -83,6 +96,11 @@
           <div class="field">
             <label for="maxBonus">Maks. bonus monet (za szybkość)</label>
             <input class="smallInput" id="maxBonus" type="number" min="0" max="10" step="1" />
+          </div>
+
+          <div class="field">
+            <label for="bonusIconPicker">Ikonka serii bonusów</label>
+            <unicode-emoji-picker id="bonusIconPicker"></unicode-emoji-picker>
           </div>
 
           <div class="field">
@@ -142,6 +160,7 @@
     </div>
   </div>
 
+  <script type="module" src="assets/js/vendor/unicode-emoji-picker.js"></script>
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
