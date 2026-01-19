@@ -18,14 +18,15 @@ export function persistSettings(settings){
 export function loadScore(){
   try{
     const raw = localStorage.getItem(SCORE_KEY);
-    if (!raw) return { coins: 0, streak: 0 };
+    if (!raw) return { coins: 0, streak: 0, bonusStreak: 0 };
     const obj = JSON.parse(raw);
     return {
       coins: Number.isFinite(obj.coins) ? obj.coins : 0,
-      streak: Number.isFinite(obj.streak) ? obj.streak : 0
+      streak: Number.isFinite(obj.streak) ? obj.streak : 0,
+      bonusStreak: Number.isFinite(obj.bonusStreak) ? obj.bonusStreak : 0
     };
   } catch {
-    return { coins: 0, streak: 0 };
+    return { coins: 0, streak: 0, bonusStreak: 0 };
   }
 }
 

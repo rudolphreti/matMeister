@@ -62,10 +62,13 @@ function awardForCorrect(){
     }
   }
 
+  const bonusAchieved = gained > 1;
+  const nextBonusStreak = bonusAchieved ? state.score.bonusStreak + 1 : 0;
   const nextScore = {
     ...state.score,
     streak: state.score.streak + 1,
-    coins: state.score.coins + gained
+    coins: state.score.coins + gained,
+    bonusStreak: nextBonusStreak
   };
   setScore(nextScore);
 
@@ -79,7 +82,7 @@ function awardForCorrect(){
 
   if (state.score.streak === 5) msg += " Seria 5!";
   if (state.score.streak === 10) msg += " Seria 10!";
-  if (state.score.streak === 10 && gained > 1) triggerDragonCelebration();
+  if (state.score.bonusStreak === 10) triggerDragonCelebration();
 
   return msg;
 }
@@ -91,7 +94,8 @@ function penalizeForWrong(){
   const nextScore = {
     ...state.score,
     streak: 0,
-    coins: nextCoins
+    coins: nextCoins,
+    bonusStreak: 0
   };
   setScore(nextScore);
 

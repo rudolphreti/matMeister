@@ -4,6 +4,7 @@ export const elFeedback = document.getElementById("feedback");
 export const elCoins = document.getElementById("coinsValue");
 export const elStreak = document.getElementById("streakValue");
 export const elBonusText = document.getElementById("bonusText");
+export const elBonusStreak = document.getElementById("bonusStreakValue");
 export const elDragonSpot = document.getElementById("dragonSpot");
 export const elDragonText = document.getElementById("dragonText");
 
