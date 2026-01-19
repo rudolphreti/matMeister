@@ -1,0 +1,1112 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Matma: X i Monety</title>
+
+  <!-- Anton (fallback: Impact/system) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b0b0e;
+      --fg:#f2f2f2;
+      --muted:#b8b8b8;
+      --panel:#121219;
+      --line:#242435;
+      --good:#38d39f;
+      --bad:#ff5c73;
+      --accent:#ffd34d;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background: radial-gradient(1200px 600px at 50% -10%, rgba(255,211,77,.10), transparent 60%),
+                  radial-gradient(900px 500px at 10% 10%, rgba(56,211,159,.08), transparent 60%),
+                  var(--bg);
+      color:var(--fg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+
+    .app{
+      width:min(920px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      background: rgba(0,0,0,.20);
+      gap:10px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:baseline;
+      gap:12px;
+      min-width: 220px;
+    }
+
+    .brand .title{
+      font-family:"Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      letter-spacing:.04em;
+      font-size:20px;
+      text-transform:uppercase;
+      margin:0;
+      line-height:1;
+    }
+
+    .brand .mini{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1;
+    }
+
+    .stats{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex:1;
+      justify-content:center;
+      min-width: 0;
+    }
+
+    .pill{
+      border:1px solid var(--line);
+      background: rgba(18,18,25,.6);
+      border-radius: 999px;
+      padding:8px 12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 0;
+      white-space:nowrap;
+    }
+    .pill .label{
+      color:var(--muted);
+      font-size:12px;
+    }
+    .pill .value{
+      font-family:"Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      letter-spacing:.03em;
+      font-size:18px;
+      line-height:1;
+    }
+
+    .gear{
+      width:44px;
+      height:44px;
+      display:grid;
+      place-items:center;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(18,18,25,.6);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .08s ease, background .2s ease;
+    }
+    .gear:active{ transform: scale(.98); }
+    .gear:hover{ background: rgba(18,18,25,.85); }
+    .gear span{
+      font-size:20px;
+      line-height:1;
+    }
+
+    .bonusBarWrap{
+      height:8px;
+      background: rgba(255,255,255,.06);
+      border-bottom:1px solid var(--line);
+      position:relative;
+    }
+    .bonusBar{
+      height:100%;
+      width:100%;
+      background: linear-gradient(90deg, rgba(255,211,77,.95), rgba(56,211,159,.95));
+      transform-origin:left center;
+      transform: scaleX(1);
+      transition: transform .08s linear, filter .2s ease;
+      filter:saturate(1.1);
+    }
+    .bonusBar.expired{
+      filter: grayscale(1) brightness(.7);
+    }
+
+    main{
+      padding: 18px 16px 20px;
+      display:grid;
+      gap:16px;
+    }
+
+    .stage{
+      background: rgba(0,0,0,.18);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      display:grid;
+      gap: 14px;
+    }
+
+    .equation{
+      font-family:"Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      letter-spacing:.03em;
+      font-size: clamp(34px, 7vw, 64px);
+      text-align:center;
+      line-height:1.05;
+      margin:0;
+      user-select:none;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    input[type="number"]{
+      width: min(220px, 70vw);
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(18,18,25,.70);
+      color: var(--fg);
+      padding: 12px 14px;
+      font-size: 18px;
+      outline:none;
+    }
+    input[type="number"]:focus{
+      border-color: rgba(255,211,77,.65);
+      box-shadow: 0 0 0 3px rgba(255,211,77,.12);
+    }
+
+    button{
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--fg);
+      padding: 12px 14px;
+      font-size: 16px; 
+      cursor:pointer;
+      transition: transform .08s ease, background .2s ease;
+    }
+    button:active{ transform: scale(.98); }
+    button:hover{ background: rgba(255,255,255,.10); }
+
+    .primary{
+      background: rgba(255,211,77,.12);
+      border-color: rgba(255,211,77,.35);
+    }
+    .primary:hover{ background: rgba(255,211,77,.18); }
+
+    .feedback{
+      text-align:center;
+      font-size: 15px;
+      color: var(--muted);
+      min-height: 22px;
+    }
+    .feedback.good{ color: var(--good); }
+    .feedback.bad{ color: var(--bad); }
+
+    .motivation{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .badge{
+      border:1px solid var(--line);
+      background: rgba(18,18,25,.55);
+      border-radius: 999px;
+      padding: 6px 10px;
+      white-space:nowrap;
+    }
+
+    /* Modal (settings) */
+    .modalOverlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .modalOverlay.open{ display:flex; }
+
+    .modal{
+      width: min(560px, 100%);
+      border-radius: var(--radius);
+      border:1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modalHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 16px;
+      border-bottom:1px solid var(--line);
+    }
+    .modalHeader h2{
+      margin:0;
+      font-family:"Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      letter-spacing:.03em;
+      font-size:18px;
+      text-transform:uppercase;
+    }
+    .modalBody{
+      padding: 14px 16px 16px;
+      display:grid;
+      gap:12px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .field{
+      display:grid;
+      gap:6px;
+    }
+    label{
+      font-size:12px;
+      color: var(--muted);
+    }
+    select, .smallInput{
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      color: var(--fg);
+      padding: 10px 12px;
+      font-size: 14px;
+      outline:none;
+      width:100%;
+    }
+    select:focus, .smallInput:focus{
+      border-color: rgba(255,211,77,.65);
+      box-shadow: 0 0 0 3px rgba(255,211,77,.10);
+    }
+
+    .rowBetween{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+      cursor:pointer;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(0,0,0,.18);
+    }
+    .dot{
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.20);
+      border: 1px solid var(--line);
+    }
+    .toggle.on .dot{
+      background: rgba(56,211,159,.85);
+      border-color: rgba(56,211,159,.45);
+    }
+
+    .modalFooter{
+      padding: 14px 16px;
+      border-top:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .hint{
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* Small screens */
+    @media (max-width: 560px){
+      .grid{ grid-template-columns: 1fr; }
+      .stats{ justify-content:flex-end; }
+      .brand{ min-width: 0; }
+      .brand .mini{ display:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app" role="application" aria-label="Gra matematyczna dla dzieci">
+    <header>
+      <div class="brand">
+        <div>
+          <div class="title">Matma • X i Monety</div>
+          <div class="mini">Nielimitowany czas, bonus za szybkość</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="pill" title="Monety">
+          <div class="label">MONETY</div>
+          <div class="value" id="coinsValue">0</div>
+        </div>
+        <div class="pill" title="Seria dobrych odpowiedzi">
+          <div class="label">SERIA</div>
+          <div class="value" id="streakValue">0</div>
+        </div>
+      </div>
+
+      <div class="gear" id="openSettings" title="Ustawienia" aria-label="Ustawienia">
+        <span>⚙</span>
+      </div>
+    </header>
+
+    <div class="bonusBarWrap" aria-label="Pasek bonusu czasu">
+      <div class="bonusBar" id="bonusBar"></div>
+    </div>
+
+    <main>
+      <section class="stage">
+        <p class="equation" id="equation">x + 3 = 7</p>
+
+        <div class="row">
+          <input id="answer" type="number" inputmode="numeric" autocomplete="off" placeholder="Wpisz x" aria-label="Odpowiedź x" />
+          <button class="primary" id="checkBtn">Sprawdź</button>
+          <button id="nextBtn" title="Następne zadanie">Następne</button>
+        </div>
+
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+
+        <div class="motivation">
+          <div class="badge" id="badgeSpeed">Bonus: <span id="bonusText">aktywny</span></div>
+          <div class="badge" id="badgeTip">Wskazówka: <span id="tipText">licz spokojnie</span></div>
+        </div>
+      </section>
+
+      <div class="hint">
+        Enter = sprawdź. Ustawienia pod ⚙ (prawy górny róg). Dźwięk wymaga pierwszej interakcji (standard w przeglądarkach).
+      </div>
+    </main>
+  </div>
+
+  <!-- Settings modal -->
+  <div class="modalOverlay" id="settingsOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Ustawienia gry">
+      <div class="modalHeader">
+        <h2>Ustawienia</h2>
+        <button id="closeSettings">Zamknij</button>
+      </div>
+
+      <div class="modalBody">
+        <div class="grid">
+          <div class="field">
+            <label for="opSelect">Operacja</label>
+            <select id="opSelect">
+              <option value="+">Dodawanie (+)</option>
+              <option value="-">Odejmowanie (−)</option>
+              <option value="*">Mnożenie (×)</option>
+              <option value="/">Dzielenie (÷)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="maxResult">Max wynik / liczby (do 100)</label>
+            <input class="smallInput" id="maxResult" type="number" min="1" max="100" step="1" />
+          </div>
+
+          <div class="field">
+            <label for="maxX">Zakres niewiadomej x (do 100)</label>
+            <input class="smallInput" id="maxX" type="number" min="1" max="100" step="1" />
+          </div>
+
+          <div class="field">
+            <label for="bonusSeconds">Czas na bonus (sek.)</label>
+            <input class="smallInput" id="bonusSeconds" type="number" min="0" max="60" step="1" />
+          </div>
+
+          <div class="field">
+            <label for="maxBonus">Maks. bonus monet (za szybkość)</label>
+            <input class="smallInput" id="maxBonus" type="number" min="0" max="10" step="1" />
+          </div>
+
+          <div class="field">
+            <label for="minZeroSelect">Monety nie spadają poniżej 0</label>
+            <select id="minZeroSelect">
+              <option value="true">Tak</option>
+              <option value="false">Nie</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="rowBetween">
+          <div class="toggle" id="soundToggle" role="switch" aria-checked="true" tabindex="0">
+            <div class="dot" aria-hidden="true"></div>
+            <div>Dźwięk</div>
+          </div>
+
+          <div class="toggle on" id="praiseToggle" role="switch" aria-checked="true" tabindex="0">
+            <div class="dot" aria-hidden="true"></div>
+            <div>Pochwały</div>
+          </div>
+
+          <div class="toggle on" id="varietyToggle" role="switch" aria-checked="true" tabindex="0">
+            <div class="dot" aria-hidden="true"></div>
+            <div>Różne pozycje x</div>
+          </div>
+        </div>
+
+        <div class="hint">
+          Domyślny preset: dodawanie, x do 10, liczby do 10, bonus aktywny, poprawna odpowiedź daje monetę + bonus (im szybciej tym więcej), błędna −1.
+        </div>
+      </div>
+
+      <div class="modalFooter">
+        <button id="resetBtn">Reset (preset domyślny)</button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+          <button id="saveBtn" class="primary">Zapisz</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**********************
+     * State + persistence
+     **********************/
+    const DEFAULTS = {
+      op: "+",
+      maxResult: 10,      // "do 10" w presecie
+      maxX: 10,           // "niewiadoma do 10" w presecie
+      bonusSeconds: 8,    // nielimitowany czas na rozwiązanie, ale bonus krótki
+      maxBonus: 4,        // max dodatkowych monet za szybkość
+      minZero: true,
+      sound: true,
+      praise: true,
+      variety: true
+    };
+
+    const STORAGE_KEY = "math_x_coins_settings_v1";
+    const SCORE_KEY = "math_x_coins_score_v1";
+
+    let settings = loadSettings();
+    let score = loadScore();
+
+    // Current question
+    let q = null;
+    let bonusStartTs = 0;
+    let bonusTimerRAF = null;
+    let bonusExpired = false;
+
+    /**********************
+     * DOM
+     **********************/
+    const elEquation = document.getElementById("equation");
+    const elAnswer = document.getElementById("answer");
+    const elCheckBtn = document.getElementById("checkBtn");
+    const elNextBtn = document.getElementById("nextBtn");
+    const elFeedback = document.getElementById("feedback");
+    const elCoins = document.getElementById("coinsValue");
+    const elStreak = document.getElementById("streakValue");
+    const elBonusBar = document.getElementById("bonusBar");
+    const elBonusText = document.getElementById("bonusText");
+    const elTipText = document.getElementById("tipText");
+
+    // Settings modal
+    const overlay = document.getElementById("settingsOverlay");
+    const openSettingsBtn = document.getElementById("openSettings");
+    const closeSettingsBtn = document.getElementById("closeSettings");
+    const saveBtn = document.getElementById("saveBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const opSelect = document.getElementById("opSelect");
+    const maxResultInput = document.getElementById("maxResult");
+    const maxXInput = document.getElementById("maxX");
+    const bonusSecondsInput = document.getElementById("bonusSeconds");
+    const maxBonusInput = document.getElementById("maxBonus");
+    const minZeroSelect = document.getElementById("minZeroSelect");
+
+    const soundToggle = document.getElementById("soundToggle");
+    const praiseToggle = document.getElementById("praiseToggle");
+    const varietyToggle = document.getElementById("varietyToggle");
+
+    /**********************
+     * Audio (coin-like)
+     **********************/
+    let audioCtx = null;
+
+    function ensureAudio(){
+      if (!audioCtx){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended"){
+        audioCtx.resume().catch(()=>{});
+      }
+    }
+
+    function playCoin(){
+      if (!settings.sound) return;
+      ensureAudio();
+      const now = audioCtx.currentTime;
+
+      // Simple "coin" blip: two fast rising tones + short click.
+      const o1 = audioCtx.createOscillator();
+      const o2 = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+
+      o1.type = "square";
+      o2.type = "triangle";
+
+      o1.frequency.setValueAtTime(880, now);
+      o1.frequency.exponentialRampToValueAtTime(1320, now + 0.06);
+
+      o2.frequency.setValueAtTime(660, now);
+      o2.frequency.exponentialRampToValueAtTime(990, now + 0.06);
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.exponentialRampToValueAtTime(0.20, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+      o1.connect(g);
+      o2.connect(g);
+      g.connect(audioCtx.destination);
+
+      o1.start(now);
+      o2.start(now);
+      o1.stop(now + 0.13);
+      o2.stop(now + 0.13);
+    }
+
+    function playWrong(){
+      if (!settings.sound) return;
+      ensureAudio();
+      const now = audioCtx.currentTime;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+
+      o.type = "sawtooth";
+      o.frequency.setValueAtTime(180, now);
+      o.frequency.exponentialRampToValueAtTime(120, now + 0.12);
+
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+
+      o.connect(g);
+      g.connect(audioCtx.destination);
+
+      o.start(now);
+      o.stop(now + 0.17);
+    }
+
+    function playCoins(n){
+      // "Za każdy pieniążek dźwięk"
+      if (n <= 0) return;
+      let i = 0;
+      const tick = () => {
+        playCoin();
+        i++;
+        if (i < n) setTimeout(tick, 70);
+      };
+      tick();
+    }
+
+    /**********************
+     * Helpers
+     **********************/
+    function clampInt(v, min, max){
+      v = Number.isFinite(v) ? Math.round(v) : min;
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function randInt(min, max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pick(arr){
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function opSymbol(op){
+      if (op === "*") return "×";
+      if (op === "/") return "÷";
+      return op;
+    }
+
+    function setFeedback(text, kind){
+      elFeedback.textContent = text || "";
+      elFeedback.classList.remove("good","bad");
+      if (kind) elFeedback.classList.add(kind);
+    }
+
+    function updateHUD(){
+      elCoins.textContent = String(score.coins);
+      elStreak.textContent = String(score.streak);
+    }
+
+    function setTip(){
+      const tips = [
+        "sprawdź w pamięci",
+        "policz spokojnie",
+        "zrób krok po kroku",
+        "najpierw uprość",
+        "pomyśl: co daje wynik?"
+      ];
+      elTipText.textContent = pick(tips);
+    }
+
+    /**********************
+     * Question generation
+     * Format: a op b = c, one of a/b/c is x
+     **********************/
+    function generateQuestion(){
+      const op = settings.op;
+      const M = settings.maxResult;
+      const X = settings.maxX;
+
+      const patternsAll = ["xLeft","xRight","xResult"];
+      const patterns = settings.variety ? patternsAll : ["xLeft"]; // minimalnie, jeśli wyłączone
+
+      // Try multiple attempts to satisfy constraints
+      for (let attempt = 0; attempt < 400; attempt++){
+        const pattern = pick(patterns);
+
+        // Choose x first (kid-friendly, non-negative integer)
+        const x = randInt(0, X);
+
+        let a = null, b = null, c = null;
+
+        if (op === "+"){
+          if (pattern === "xLeft"){
+            b = randInt(0, M);
+            c = x + b;
+            if (c > M) continue;
+            a = "x";
+          } else if (pattern === "xRight"){
+            a = randInt(0, M);
+            c = a + x;
+            if (c > M) continue;
+            b = "x";
+          } else { // xResult
+            a = randInt(0, M);
+            b = randInt(0, M);
+            c = "x";
+            if (a + b !== x) continue;
+            if (a + b > M) continue;
+          }
+        }
+
+        if (op === "-"){
+          if (pattern === "xLeft"){
+            b = randInt(0, M);
+            c = x - b;
+            if (c < 0 || c > M) continue;
+            a = "x";
+          } else if (pattern === "xRight"){
+            a = randInt(0, M);
+            c = a - x;
+            if (c < 0 || c > M) continue;
+            b = "x";
+          } else { // xResult
+            a = randInt(0, M);
+            b = randInt(0, M);
+            if (a - b !== x) continue;
+            if (a - b < 0) continue;
+            c = "x";
+          }
+        }
+
+        if (op === "*"){
+          if (pattern === "xLeft"){
+            b = randInt(0, M);
+            c = x * b;
+            if (c > M) continue;
+            a = "x";
+          } else if (pattern === "xRight"){
+            a = randInt(0, M);
+            c = a * x;
+            if (c > M) continue;
+            b = "x";
+          } else { // xResult
+            a = randInt(0, M);
+            b = randInt(0, M);
+            if (a * b !== x) continue;
+            if (a * b > M) continue;
+            c = "x";
+          }
+        }
+
+        if (op === "/"){
+          // Division must stay integer and avoid division by zero
+          if (pattern === "xLeft"){
+            // x ÷ b = c  => choose b,c then x=b*c (x is answer)
+            b = randInt(1, Math.max(1, M)); // divisor
+            c = randInt(0, M);
+            const xx = b * c;
+            if (xx > X) continue;
+            if (xx > M) continue; // keep displayed numbers within M
+            a = "x";
+            // set x to xx
+            return buildQuestion(op, pattern, xx, a, b, c);
+          } else if (pattern === "xRight"){
+            // a ÷ x = c  => choose x,c then a=x*c
+            const xx = randInt(1, Math.max(1, X)); // divisor must be >=1
+            c = randInt(0, M);
+            a = xx * c;
+            if (a > M) continue;
+            b = "x";
+            return buildQuestion(op, pattern, xx, a, b, c);
+          } else {
+            // a ÷ b = x => choose a,b such that a divisible by b and result == x
+            b = randInt(1, Math.max(1, M));
+            const xx = randInt(0, X);
+            a = b * xx;
+            if (a > M) continue;
+            c = "x";
+            return buildQuestion(op, pattern, xx, a, b, c);
+          }
+        }
+
+        // For non-division ops, build here (division returns early)
+        return buildQuestion(op, pattern, x, a, b, c);
+      }
+
+      // Fallback safe question
+      return buildQuestion("+", "xLeft", 3, "x", 2, 5);
+    }
+
+    function buildQuestion(op, pattern, x, a, b, c){
+      const sym = opSymbol(op);
+      const leftA = (a === "x") ? "x" : String(a);
+      const leftB = (b === "x") ? "x" : String(b);
+      const rightC = (c === "x") ? "x" : String(c);
+
+      const equation = `${leftA} ${sym} ${leftB} = ${rightC}`;
+
+      // Validate: exactly one x
+      const countX = [leftA,leftB,rightC].filter(v => v === "x").length;
+      if (countX !== 1){
+        // force x on left
+        return { equation: `x ${sym} 1 = ${String(x + 1)}`, answer: x };
+      }
+
+      return { equation, answer: x, op, pattern };
+    }
+
+    /**********************
+     * Bonus timer
+     **********************/
+    function startBonusTimer(){
+      cancelAnimationFrame(bonusTimerRAF);
+      bonusStartTs = performance.now();
+      bonusExpired = (settings.bonusSeconds <= 0);
+      updateBonusUI();
+
+      const tick = () => {
+        updateBonusUI();
+        bonusTimerRAF = requestAnimationFrame(tick);
+      };
+      bonusTimerRAF = requestAnimationFrame(tick);
+    }
+
+    function bonusRemaining(){
+      if (settings.bonusSeconds <= 0) return 0;
+      const elapsed = (performance.now() - bonusStartTs) / 1000;
+      return Math.max(0, settings.bonusSeconds - elapsed);
+    }
+
+    function updateBonusUI(){
+      const rem = bonusRemaining();
+      const total = Math.max(0.0001, settings.bonusSeconds);
+      const ratio = settings.bonusSeconds <= 0 ? 0 : (rem / total);
+
+      elBonusBar.style.transform = `scaleX(${ratio})`;
+      if (rem <= 0){
+        elBonusBar.classList.add("expired");
+        elBonusText.textContent = "wygasł";
+        bonusExpired = true;
+      } else {
+        elBonusBar.classList.remove("expired");
+        elBonusText.textContent = `aktywny (${rem.toFixed(1)}s)`;
+        bonusExpired = false;
+      }
+    }
+
+    /**********************
+     * Scoring + motivation
+     **********************/
+    const PRAISE = [
+      "Brawo!",
+      "Super!",
+      "Świetnie policzone!",
+      "Tak trzymać!",
+      "Perfekcyjnie!",
+      "Moc!",
+      "Genialnie!",
+      "Dobra robota!"
+    ];
+
+    function awardForCorrect(){
+      // base coin
+      let gained = 1;
+
+      // speed bonus
+      if (settings.bonusSeconds > 0){
+        const rem = bonusRemaining();
+        if (rem > 0 && settings.maxBonus > 0){
+          const ratio = rem / settings.bonusSeconds; // 0..1
+          const extra = Math.max(0, Math.floor(ratio * settings.maxBonus));
+          gained += extra;
+        }
+      }
+
+      score.streak += 1;
+      score.coins += gained;
+
+      saveScore(score);
+      updateHUD();
+      playCoins(gained);
+
+      let msg = settings.praise ? pick(PRAISE) : "Dobrze.";
+      if (gained > 1) msg += ` +${gained} monet (bonus za szybkość).`;
+      else msg += ` +1 moneta.`;
+
+      // Mini-badges via feedback and tip
+      if (score.streak === 5) msg += " Seria 5!";
+      if (score.streak === 10) msg += " Seria 10!";
+
+      return msg;
+    }
+
+    function penalizeForWrong(){
+      score.streak = 0;
+
+      const before = score.coins;
+      score.coins -= 1;
+      if (settings.minZero) score.coins = Math.max(0, score.coins);
+
+      saveScore(score);
+      updateHUD();
+
+      playWrong();
+
+      if (before === 0 && settings.minZero) return "Prawie! Spróbuj jeszcze raz.";
+      return "Nie tym razem. −1 moneta.";
+    }
+
+    /**********************
+     * Game flow
+     **********************/
+    function newQuestion(){
+      q = generateQuestion();
+      elEquation.textContent = q.equation;
+      elAnswer.value = "";
+      elAnswer.focus();
+      setFeedback("", null);
+      setTip();
+      startBonusTimer();
+    }
+
+    function checkAnswer(){
+      ensureAudio(); // ensure audio context gets unlocked by user gesture
+      if (!q) return;
+
+      const raw = elAnswer.value.trim();
+      if (raw === ""){
+        setFeedback("Wpisz liczbę dla x.", null);
+        return;
+      }
+
+      const ans = Number(raw);
+      if (!Number.isFinite(ans)){
+        setFeedback("To nie wygląda jak liczba.", "bad");
+        return;
+      }
+
+      if (Math.round(ans) !== ans){
+        setFeedback("Tylko liczby całkowite.", "bad");
+        return;
+      }
+
+      if (ans === q.answer){
+        const msg = awardForCorrect();
+        setFeedback(msg, "good");
+        // automatycznie następne po chwili (minimalnie, bez rozpraszania)
+        setTimeout(newQuestion, 650);
+      } else {
+        const msg = penalizeForWrong();
+        setFeedback(msg, "bad");
+      }
+    }
+
+    /**********************
+     * Settings UI
+     **********************/
+    function openSettings(){
+      // fill form
+      opSelect.value = settings.op;
+      maxResultInput.value = settings.maxResult;
+      maxXInput.value = settings.maxX;
+      bonusSecondsInput.value = settings.bonusSeconds;
+      maxBonusInput.value = settings.maxBonus;
+      minZeroSelect.value = String(settings.minZero);
+
+      setToggle(soundToggle, settings.sound);
+      setToggle(praiseToggle, settings.praise);
+      setToggle(varietyToggle, settings.variety);
+
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden","false");
+    }
+
+    function closeSettings(){
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden","true");
+    }
+
+    function setToggle(el, on){
+      el.classList.toggle("on", !!on);
+      el.setAttribute("aria-checked", String(!!on));
+    }
+
+    function toggleFromEl(el){
+      const on = !el.classList.contains("on");
+      setToggle(el, on);
+      return on;
+    }
+
+    function saveSettingsFromForm(){
+      const s = { ...settings };
+
+      s.op = opSelect.value;
+      s.maxResult = clampInt(parseInt(maxResultInput.value,10), 1, 100);
+      s.maxX = clampInt(parseInt(maxXInput.value,10), 1, 100);
+      s.bonusSeconds = clampInt(parseInt(bonusSecondsInput.value,10), 0, 60);
+      s.maxBonus = clampInt(parseInt(maxBonusInput.value,10), 0, 10);
+      s.minZero = (minZeroSelect.value === "true");
+
+      s.sound = soundToggle.classList.contains("on");
+      s.praise = praiseToggle.classList.contains("on");
+      s.variety = varietyToggle.classList.contains("on");
+
+      // Ensure consistency: if maxX > maxResult, it's fine, but keep numbers bounded by maxResult anyway.
+      settings = s;
+      persistSettings(settings);
+
+      closeSettings();
+      // start a new question with new rules
+      newQuestion();
+    }
+
+    function resetToDefaults(){
+      settings = { ...DEFAULTS };
+      persistSettings(settings);
+      closeSettings();
+      newQuestion();
+    }
+
+    /**********************
+     * Persistence
+     **********************/
+    function loadSettings(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { ...DEFAULTS };
+        const obj = JSON.parse(raw);
+        return { ...DEFAULTS, ...obj };
+      } catch {
+        return { ...DEFAULTS };
+      }
+    }
+
+    function persistSettings(s){
+      try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {}
+    }
+
+    function loadScore(){
+      try{
+        const raw = localStorage.getItem(SCORE_KEY);
+        if (!raw) return { coins: 0, streak: 0 };
+        const obj = JSON.parse(raw);
+        return {
+          coins: Number.isFinite(obj.coins) ? obj.coins : 0,
+          streak: Number.isFinite(obj.streak) ? obj.streak : 0
+        };
+      } catch {
+        return { coins: 0, streak: 0 };
+      }
+    }
+
+    function saveScore(sc){
+      try{ localStorage.setItem(SCORE_KEY, JSON.stringify(sc)); } catch {}
+    }
+
+    /**********************
+     * Events
+     **********************/
+    elCheckBtn.addEventListener("click", checkAnswer);
+    elNextBtn.addEventListener("click", () => { ensureAudio(); newQuestion(); });
+
+    elAnswer.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkAnswer();
+    });
+
+    openSettingsBtn.addEventListener("click", () => { ensureAudio(); openSettings(); });
+    closeSettingsBtn.addEventListener("click", closeSettings);
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) closeSettings(); });
+
+    saveBtn.addEventListener("click", saveSettingsFromForm);
+    resetBtn.addEventListener("click", resetToDefaults);
+
+    soundToggle.addEventListener("click", () => setToggle(soundToggle, toggleFromEl(soundToggle)));
+    praiseToggle.addEventListener("click", () => setToggle(praiseToggle, toggleFromEl(praiseToggle)));
+    varietyToggle.addEventListener("click", () => setToggle(varietyToggle, toggleFromEl(varietyToggle)));
+
+    // keyboard toggles
+    [soundToggle, praiseToggle, varietyToggle].forEach(el => {
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          setToggle(el, toggleFromEl(el));
+        }
+      });
+    });
+
+    // Unlock audio on first user gesture anywhere
+    window.addEventListener("pointerdown", ensureAudio, { once:true });
+
+    /**********************
+     * Init
+     **********************/
+    updateHUD();
+    newQuestion();
+  </script>
+</body>
+</html>
