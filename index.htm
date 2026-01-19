@@ -58,34 +58,17 @@
       gap:10px;
     }
 
-    .brand{
+    .headerCenter{
       display:flex;
-      align-items:baseline;
-      gap:12px;
-      min-width: 220px;
-    }
-
-    .brand .title{
-      font-family:"Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-      letter-spacing:.04em;
-      font-size:20px;
-      text-transform:uppercase;
-      margin:0;
-      line-height:1;
-    }
-
-    .brand .mini{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1;
+      align-items:center;
+      justify-content:center;
+      flex:1;
     }
 
     .stats{
       display:flex;
       align-items:center;
       gap:14px;
-      flex:1;
-      justify-content:center;
       min-width: 0;
     }
 
@@ -111,7 +94,7 @@
       line-height:1;
     }
 
-    .gear{
+    .menuBtn{
       width:44px;
       height:44px;
       display:grid;
@@ -123,30 +106,11 @@
       user-select:none;
       transition: transform .08s ease, background .2s ease;
     }
-    .gear:active{ transform: scale(.98); }
-    .gear:hover{ background: rgba(18,18,25,.85); }
-    .gear span{
-      font-size:20px;
+    .menuBtn:active{ transform: scale(.98); }
+    .menuBtn:hover{ background: rgba(18,18,25,.85); }
+    .menuBtn span{
+      font-size:22px;
       line-height:1;
-    }
-
-    .bonusBarWrap{
-      height:8px;
-      background: rgba(255,255,255,.06);
-      border-bottom:1px solid var(--line);
-      position:relative;
-    }
-    .bonusBar{
-      height:100%;
-      width:100%;
-      background: linear-gradient(90deg, rgba(255,211,77,.95), rgba(56,211,159,.95));
-      transform-origin:left center;
-      transform: scaleX(1);
-      transition: transform .08s linear, filter .2s ease;
-      filter:saturate(1.1);
-    }
-    .bonusBar.expired{
-      filter: grayscale(1) brightness(.7);
     }
 
     main{
@@ -162,6 +126,7 @@
       padding: 18px 16px;
       display:grid;
       gap: 14px;
+      justify-items:center;
     }
 
     .equation{
@@ -216,6 +181,10 @@
     }
     .primary:hover{ background: rgba(255,211,77,.18); }
 
+    .secondary{
+      background: rgba(255,255,255,.02);
+    }
+
     .feedback{
       text-align:center;
       font-size: 15px;
@@ -225,21 +194,6 @@
     .feedback.good{ color: var(--good); }
     .feedback.bad{ color: var(--bad); }
 
-    .motivation{
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      flex-wrap:wrap;
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .badge{
-      border:1px solid var(--line);
-      background: rgba(18,18,25,.55);
-      border-radius: 999px;
-      padding: 6px 10px;
-      white-space:nowrap;
-    }
 
     /* Modal (settings) */
     .modalOverlay{
@@ -353,12 +307,91 @@
       line-height: 1.35;
     }
 
+    /* Sidebar */
+    .sidebarOverlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:stretch;
+      justify-content:flex-start;
+    }
+    .sidebarOverlay.open{ display:flex; }
+    .sidebar{
+      width:min(320px, 85vw);
+      background: var(--panel);
+      border-right:1px solid var(--line);
+      padding: 16px;
+      display:grid;
+      gap:14px;
+      box-shadow: var(--shadow);
+    }
+    .sidebarHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .sidebarTitle{
+      font-family:"Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      letter-spacing:.03em;
+      font-size:18px;
+      text-transform:uppercase;
+      margin:0;
+    }
+    .menuGroup{
+      display:grid;
+      gap:10px;
+    }
+    .menuButton{
+      width:100%;
+      text-align:left;
+    }
+    .statusCard{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.2);
+      border-radius: 14px;
+      padding: 12px;
+      display:grid;
+      gap:8px;
+    }
+    .statusRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-size:13px;
+      color: var(--muted);
+    }
+    .statusRow strong{
+      color: var(--fg);
+      font-size:16px;
+      font-family:"Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      letter-spacing:.02em;
+    }
+    .bonusBarWrap{
+      height:8px;
+      background: rgba(255,255,255,.06);
+      border-radius:999px;
+      overflow:hidden;
+      position:relative;
+    }
+    .bonusBar{
+      height:100%;
+      width:100%;
+      background: linear-gradient(90deg, rgba(255,211,77,.95), rgba(56,211,159,.95));
+      transform-origin:left center;
+      transform: scaleX(1);
+      transition: transform .08s linear, filter .2s ease;
+      filter:saturate(1.1);
+    }
+    .bonusBar.expired{
+      filter: grayscale(1) brightness(.7);
+    }
+
     /* Small screens */
     @media (max-width: 560px){
       .grid{ grid-template-columns: 1fr; }
-      .stats{ justify-content:flex-end; }
-      .brand{ min-width: 0; }
-      .brand .mini{ display:none; }
+      .stats{ justify-content:center; }
     }
   </style>
 </head>
@@ -366,32 +399,21 @@
 <body>
   <div class="app" role="application" aria-label="Gra matematyczna dla dzieci">
     <header>
-      <div class="brand">
-        <div>
-          <div class="title">Matma • X i Monety</div>
-          <div class="mini">Nielimitowany czas, bonus za szybkość</div>
+      <button class="menuBtn" id="openMenu" title="Menu" aria-label="Menu">
+        <span>☰</span>
+      </button>
+
+      <div class="headerCenter">
+        <div class="stats">
+          <div class="pill" title="Monety">
+            <div class="label">MONETY</div>
+            <div class="value" id="coinsValue">0</div>
+          </div>
         </div>
       </div>
 
-      <div class="stats">
-        <div class="pill" title="Monety">
-          <div class="label">MONETY</div>
-          <div class="value" id="coinsValue">0</div>
-        </div>
-        <div class="pill" title="Seria dobrych odpowiedzi">
-          <div class="label">SERIA</div>
-          <div class="value" id="streakValue">0</div>
-        </div>
-      </div>
-
-      <div class="gear" id="openSettings" title="Ustawienia" aria-label="Ustawienia">
-        <span>⚙</span>
-      </div>
+      <div style="width:44px;"></div>
     </header>
-
-    <div class="bonusBarWrap" aria-label="Pasek bonusu czasu">
-      <div class="bonusBar" id="bonusBar"></div>
-    </div>
 
     <main>
       <section class="stage">
@@ -400,21 +422,42 @@
         <div class="row">
           <input id="answer" type="number" inputmode="numeric" autocomplete="off" placeholder="Wpisz x" aria-label="Odpowiedź x" />
           <button class="primary" id="checkBtn">Sprawdź</button>
-          <button id="nextBtn" title="Następne zadanie">Następne</button>
+          <button id="nextBtn" class="secondary" title="Następne zadanie">Następne</button>
         </div>
 
         <div class="feedback" id="feedback" aria-live="polite"></div>
 
-        <div class="motivation">
-          <div class="badge" id="badgeSpeed">Bonus: <span id="bonusText">aktywny</span></div>
-          <div class="badge" id="badgeTip">Wskazówka: <span id="tipText">licz spokojnie</span></div>
-        </div>
       </section>
-
-      <div class="hint">
-        Enter = sprawdź. Ustawienia pod ⚙ (prawy górny róg). Dźwięk wymaga pierwszej interakcji (standard w przeglądarkach).
-      </div>
     </main>
+  </div>
+
+  <!-- Sidebar menu -->
+  <div class="sidebarOverlay" id="menuOverlay" aria-hidden="true">
+    <aside class="sidebar" role="dialog" aria-label="Menu">
+      <div class="sidebarHeader">
+        <h2 class="sidebarTitle">Menu</h2>
+        <button id="closeMenu">Zamknij</button>
+      </div>
+
+      <div class="menuGroup">
+        <button class="menuButton primary" id="menuSettings">Ustawienia</button>
+        <button class="menuButton" id="menuHelp">Pomoc</button>
+      </div>
+
+      <div class="statusCard" aria-label="Status gry">
+        <div class="statusRow">
+          <span>Seria</span>
+          <strong id="streakValue">0</strong>
+        </div>
+        <div class="statusRow">
+          <span>Bonus</span>
+          <strong id="bonusText">aktywny</strong>
+        </div>
+        <div class="bonusBarWrap" aria-label="Pasek bonusu czasu">
+          <div class="bonusBar" id="bonusBar"></div>
+        </div>
+      </div>
+    </aside>
   </div>
 
   <!-- Settings modal -->
@@ -497,6 +540,23 @@
     </div>
   </div>
 
+  <!-- Help modal -->
+  <div class="modalOverlay" id="helpOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Pomoc">
+      <div class="modalHeader">
+        <h2>Pomoc</h2>
+        <button id="closeHelp">Zamknij</button>
+      </div>
+
+      <div class="modalBody">
+        <div class="hint">
+          Wpisz wynik x i kliknij „Sprawdź”. Enter = sprawdź. „Następne” daje nowe zadanie.
+          Dźwięk wymaga pierwszej interakcji (standard przeglądarek).
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     /**********************
      * State + persistence
@@ -537,14 +597,21 @@
     const elStreak = document.getElementById("streakValue");
     const elBonusBar = document.getElementById("bonusBar");
     const elBonusText = document.getElementById("bonusText");
-    const elTipText = document.getElementById("tipText");
 
     // Settings modal
     const overlay = document.getElementById("settingsOverlay");
-    const openSettingsBtn = document.getElementById("openSettings");
     const closeSettingsBtn = document.getElementById("closeSettings");
     const saveBtn = document.getElementById("saveBtn");
     const resetBtn = document.getElementById("resetBtn");
+
+    // Sidebar + help
+    const menuOverlay = document.getElementById("menuOverlay");
+    const openMenuBtn = document.getElementById("openMenu");
+    const closeMenuBtn = document.getElementById("closeMenu");
+    const menuSettingsBtn = document.getElementById("menuSettings");
+    const menuHelpBtn = document.getElementById("menuHelp");
+    const helpOverlay = document.getElementById("helpOverlay");
+    const closeHelpBtn = document.getElementById("closeHelp");
 
     const opSelect = document.getElementById("opSelect");
     const maxResultInput = document.getElementById("maxResult");
@@ -669,17 +736,6 @@
     function updateHUD(){
       elCoins.textContent = String(score.coins);
       elStreak.textContent = String(score.streak);
-    }
-
-    function setTip(){
-      const tips = [
-        "sprawdź w pamięci",
-        "policz spokojnie",
-        "zrób krok po kroku",
-        "najpierw uprość",
-        "pomyśl: co daje wynik?"
-      ];
-      elTipText.textContent = pick(tips);
     }
 
     /**********************
@@ -898,7 +954,7 @@
       if (gained > 1) msg += ` +${gained} monet (bonus za szybkość).`;
       else msg += ` +1 moneta.`;
 
-      // Mini-badges via feedback and tip
+      // Mini-badges via feedback
       if (score.streak === 5) msg += " Seria 5!";
       if (score.streak === 10) msg += " Seria 10!";
 
@@ -930,7 +986,6 @@
       elAnswer.value = "";
       elAnswer.focus();
       setFeedback("", null);
-      setTip();
       startBonusTimer();
     }
 
@@ -989,6 +1044,26 @@
     function closeSettings(){
       overlay.classList.remove("open");
       overlay.setAttribute("aria-hidden","true");
+    }
+
+    function openMenu(){
+      menuOverlay.classList.add("open");
+      menuOverlay.setAttribute("aria-hidden","false");
+    }
+
+    function closeMenu(){
+      menuOverlay.classList.remove("open");
+      menuOverlay.setAttribute("aria-hidden","true");
+    }
+
+    function openHelp(){
+      helpOverlay.classList.add("open");
+      helpOverlay.setAttribute("aria-hidden","false");
+    }
+
+    function closeHelp(){
+      helpOverlay.classList.remove("open");
+      helpOverlay.setAttribute("aria-hidden","true");
     }
 
     function setToggle(el, on){
@@ -1078,9 +1153,18 @@
       if (e.key === "Enter") checkAnswer();
     });
 
-    openSettingsBtn.addEventListener("click", () => { ensureAudio(); openSettings(); });
+    openMenuBtn.addEventListener("click", openMenu);
+    closeMenuBtn.addEventListener("click", closeMenu);
+    menuOverlay.addEventListener("click", (e) => { if (e.target === menuOverlay) closeMenu(); });
+
+    menuSettingsBtn.addEventListener("click", () => { ensureAudio(); closeMenu(); openSettings(); });
+    menuHelpBtn.addEventListener("click", () => { closeMenu(); openHelp(); });
+
     closeSettingsBtn.addEventListener("click", closeSettings);
     overlay.addEventListener("click", (e) => { if (e.target === overlay) closeSettings(); });
+
+    closeHelpBtn.addEventListener("click", closeHelp);
+    helpOverlay.addEventListener("click", (e) => { if (e.target === helpOverlay) closeHelp(); });
 
     saveBtn.addEventListener("click", saveSettingsFromForm);
     resetBtn.addEventListener("click", resetToDefaults);
