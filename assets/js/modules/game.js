@@ -82,7 +82,9 @@ function awardForCorrect(){
 
   if (state.score.streak === 5) msg += " Seria 5!";
   if (state.score.streak === 10) msg += " Seria 10!";
-  if (state.score.bonusStreak === 10) triggerDragonCelebration();
+  if (state.score.bonusStreak > 0 && state.score.bonusStreak % 10 === 0){
+    triggerDragonCelebration();
+  }
 
   return msg;
 }

@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { elCoins, elStreak, elFeedback, elBonusStreak } from "./dom.js";
+import { elCoins, elStreak, elFeedback, elBonusStreak, elBonusStreakIcon } from "./dom.js";
 
 export function setFeedback(text, kind){
   elFeedback.textContent = text || "";
@@ -11,6 +11,7 @@ export function updateHUD(){
   elCoins.textContent = String(state.score.coins);
   elStreak.textContent = String(state.score.streak);
   if (elBonusStreak) elBonusStreak.textContent = String(state.score.bonusStreak);
+  if (elBonusStreakIcon) elBonusStreakIcon.textContent = state.settings.bonusIcon || "✨";
 }
 
 export function setToggle(el, on){

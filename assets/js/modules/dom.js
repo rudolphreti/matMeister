@@ -5,6 +5,7 @@ export const elCoins = document.getElementById("coinsValue");
 export const elStreak = document.getElementById("streakValue");
 export const elBonusText = document.getElementById("bonusText");
 export const elBonusStreak = document.getElementById("bonusStreakValue");
+export const elBonusStreakIcon = document.getElementById("bonusStreakIcon");
 export const elDragonSpot = document.getElementById("dragonSpot");
 export const elDragonText = document.getElementById("dragonText");
 
@@ -22,6 +23,7 @@ export const maxXInput = document.getElementById("maxX");
 export const bonusSecondsInput = document.getElementById("bonusSeconds");
 export const maxBonusInput = document.getElementById("maxBonus");
 export const minZeroSelect = document.getElementById("minZeroSelect");
+export const bonusIconSelect = document.getElementById("bonusIconSelect");
 
 export const soundToggle = document.getElementById("soundToggle");
 export const praiseToggle = document.getElementById("praiseToggle");

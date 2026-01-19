@@ -6,6 +6,7 @@ import {
   bonusSecondsInput,
   maxBonusInput,
   minZeroSelect,
+  bonusIconSelect,
   soundToggle,
   praiseToggle,
   varietyToggle
@@ -14,16 +15,25 @@ import { state, setSettings } from "./state.js";
 import { clampInt } from "./utils.js";
 import { persistSettings } from "./storage.js";
 import { newQuestion } from "./game.js";
-import { setToggle } from "./ui.js";
-import { DEFAULTS } from "./defaults.js";
+import { setToggle, updateHUD } from "./ui.js";
+import { BONUS_ICONS, DEFAULTS } from "./defaults.js";
 
 export function openSettings(){
+  bonusIconSelect.innerHTML = "";
+  BONUS_ICONS.forEach((icon) => {
+    const option = document.createElement("option");
+    option.value = icon;
+    option.textContent = icon;
+    bonusIconSelect.append(option);
+  });
+
   opSelect.value = state.settings.op;
   maxResultInput.value = state.settings.maxResult;
   maxXInput.value = state.settings.maxX;
   bonusSecondsInput.value = state.settings.bonusSeconds;
   maxBonusInput.value = state.settings.maxBonus;
   minZeroSelect.value = String(state.settings.minZero);
+  bonusIconSelect.value = state.settings.bonusIcon;
 
   setToggle(soundToggle, state.settings.sound);
   setToggle(praiseToggle, state.settings.praise);
@@ -47,6 +57,7 @@ export function saveSettingsFromForm(){
   next.bonusSeconds = clampInt(parseInt(bonusSecondsInput.value,10), 0, 60);
   next.maxBonus = clampInt(parseInt(maxBonusInput.value,10), 0, 10);
   next.minZero = (minZeroSelect.value === "true");
+  next.bonusIcon = bonusIconSelect.value || DEFAULTS.bonusIcon;
 
   next.sound = soundToggle.classList.contains("on");
   next.praise = praiseToggle.classList.contains("on");
@@ -54,6 +65,7 @@ export function saveSettingsFromForm(){
 
   setSettings(next);
   persistSettings(state.settings);
+  updateHUD();
 
   closeSettings();
   newQuestion();
@@ -62,6 +74,7 @@ export function saveSettingsFromForm(){
 export function resetToDefaults(){
   setSettings({ ...DEFAULTS });
   persistSettings(state.settings);
+  updateHUD();
   closeSettings();
   newQuestion();
 }

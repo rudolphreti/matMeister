@@ -7,7 +7,8 @@ export const DEFAULTS = {
   minZero: true,
   sound: true,
   praise: true,
-  variety: true
+  variety: true,
+  bonusIcon: "✨"
 };
 
 export const STORAGE_KEY = "math_x_coins_settings_v1";
@@ -31,4 +32,19 @@ export const DRAGON_QUOTES = [
   "Twoja seria jest legendarna!",
   "Potęga umysłu! Lecimy dalej!",
   "To była smocza szybkość!"
+];
+
+export const BONUS_ICONS = [
+  "✨",
+  "🔥",
+  "⚡",
+  "⭐",
+  "💎",
+  "🏆",
+  "🎯",
+  "🚀",
+  "🧠",
+  "🪙",
+  "🌟",
+  "🦖"
 ];
