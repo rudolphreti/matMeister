@@ -38,10 +38,11 @@ body{
 header{
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:space-between;
   padding:14px 16px;
   border-bottom:1px solid var(--line);
   background: rgba(0,0,0,.20);
+  gap:12px;
 }
 
 .stats{
@@ -51,6 +52,28 @@ header{
   flex-wrap:wrap;
   justify-content:center;
   min-width: 0;
+  flex: 1 1 auto;
+}
+
+.headerActions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+
+.iconButton{
+  width:44px;
+  height:44px;
+  padding:0;
+  border-radius: 12px;
+  display:grid;
+  place-items:center;
+}
+.iconButton svg{
+  width:22px;
+  height:22px;
+  fill: currentColor;
 }
 
 .pill{

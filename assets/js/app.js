@@ -1,5 +1,7 @@
 import {
   elAnswer,
+  settingsBtn,
+  helpBtn,
   overlay,
   closeSettingsBtn,
   saveBtn,
@@ -32,12 +34,14 @@ elAnswer.addEventListener("keydown", (e) => {
 
 closeSettingsBtn.addEventListener("click", closeSettings);
 overlay.addEventListener("click", (e) => { if (e.target === overlay) closeSettings(); });
+settingsBtn.addEventListener("click", openSettings);
 
 saveBtn.addEventListener("click", saveSettingsFromForm);
 resetBtn.addEventListener("click", resetToDefaults);
 
 closeHelpBtn.addEventListener("click", closeHelp);
 helpOverlay.addEventListener("click", (e) => { if (e.target === helpOverlay) closeHelp(); });
+helpBtn.addEventListener("click", openHelp);
 
 soundToggle.addEventListener("click", () => setToggle(soundToggle, toggleFromEl(soundToggle)));
 praiseToggle.addEventListener("click", () => setToggle(praiseToggle, toggleFromEl(praiseToggle)));

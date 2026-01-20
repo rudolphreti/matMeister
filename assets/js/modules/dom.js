@@ -8,6 +8,9 @@ export const elBonusStreak = document.getElementById("bonusStreakValue");
 export const elDragonSpot = document.getElementById("dragonSpot");
 export const elDragonText = document.getElementById("dragonText");
 
+export const settingsBtn = document.getElementById("settingsBtn");
+export const helpBtn = document.getElementById("helpBtn");
+
 export const overlay = document.getElementById("settingsOverlay");
 export const closeSettingsBtn = document.getElementById("closeSettings");
 export const saveBtn = document.getElementById("saveBtn");
